@@ -3,7 +3,7 @@ PERCENTUAIS = {
     'Locação': 9.0,
     'CMV': 30.0,
     'Nota': 12.0,
-    'Outros (Mockup)': 37.0
+    'Lucro': 37.0
 }
 
 CORES = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#FFA07A', '#98D8C8']
@@ -13,8 +13,8 @@ ESTILOS = {
         QWidget {
             background: qlineargradient(
                 x1:0, y1:0, x2:1, y2:1,
-                stop:0 #667eea, 
-                stop:1 #764ba2
+                stop:0 #28431a, 
+                stop:1 #3d6329
             );
             border-radius: 15px;
             padding: 25px;
@@ -48,7 +48,7 @@ ESTILOS = {
             font-weight: bold;
         }
         QGroupBox::title {
-            color: #667eea;
+            color: #28431a;
             subcontrol-origin: margin;
             left: 15px;
             padding: 0 5px;
@@ -64,7 +64,7 @@ ESTILOS = {
             background-color: #f8f9fa;
         }
         QLineEdit:focus {
-            border: 2px solid #667eea;
+            border: 2px solid #28431a;
             background-color: white;
         }
     """,
@@ -73,8 +73,8 @@ ESTILOS = {
         QPushButton {
             background: qlineargradient(
                 x1:0, y1:0, x2:0, y2:1,
-                stop:0 #667eea, 
-                stop:1 #764ba2
+                stop:0 #28431a, 
+                stop:1 #3d6329
             );
             color: white;
             border-radius: 8px;
@@ -86,15 +86,15 @@ ESTILOS = {
         QPushButton:hover {
             background: qlineargradient(
                 x1:0, y1:0, x2:0, y2:1,
-                stop:0 #5568d3, 
-                stop:1 #6a3f8f
+                stop:0 #3a5c28, 
+                stop:1 #2f4a1f
             );
         }
         QPushButton:pressed {
             background: qlineargradient(
                 x1:0, y1:0, x2:0, y2:1,
-                stop:0 #4a5abc, 
-                stop:1 #5c3680
+                stop:0 #264414, 
+                stop:1 #1f3510
             );
         }
     """,
@@ -109,7 +109,7 @@ ESTILOS = {
             font-weight: bold;
         }
         QGroupBox::title {
-            color: #667eea;
+            color: #28431a;
             subcontrol-origin: margin;
             left: 15px;
             padding: 0 5px;
@@ -126,7 +126,7 @@ ESTILOS = {
             font-weight: bold;
         }
         QGroupBox::title {
-            color: #667eea;
+            color: #28431a;
             subcontrol-origin: margin;
             left: 15px;
             padding: 0 5px;
@@ -143,7 +143,7 @@ ESTILOS = {
     
     'label_valor': """
         QLabel {
-            color: #667eea;
+            color: #28431a;
             font-size: 14px;
             font-weight: bold;
         }

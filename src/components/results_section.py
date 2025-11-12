@@ -26,7 +26,7 @@ class ResultsSectionComponent(QWidget):
                 font-weight: bold;
             }
             QGroupBox::title {
-                color: #667eea;
+                color: #28431a;
                 subcontrol-origin: margin;
                 left: 15px;
                 top: 8px;
@@ -52,7 +52,7 @@ class ResultsSectionComponent(QWidget):
             label_valor = QLabel("R$ 0,00")
             label_valor.setStyleSheet("""
                 QLabel {
-                    color: #667eea;
+                    color: #28431a;
                     font-size: 14px;
                     font-weight: bold;
                 }

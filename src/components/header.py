@@ -55,8 +55,8 @@ class HeaderComponent(QWidget):
             QWidget {
                 background: qlineargradient(
                     x1:0, y1:0, x2:1, y2:1,
-                    stop:0 #667eea, 
-                    stop:1 #764ba2
+                    stop:0 #28431a, 
+                    stop:1 #3d6329
                 );
                 border-radius: 15px;
             }

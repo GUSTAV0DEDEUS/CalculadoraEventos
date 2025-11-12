@@ -26,7 +26,7 @@ class InputSectionComponent(QWidget):
                 font-weight: bold;
             }
             QGroupBox::title {
-                color: #667eea;
+                color: #28431a;
                 subcontrol-origin: margin;
                 left: 15px;
                 top: 8px;
@@ -52,7 +52,7 @@ class InputSectionComponent(QWidget):
                 background-color: #f8f9fa;
             }
             QLineEdit:focus {
-                border: 2px solid #667eea;
+                border: 2px solid #28431a;
                 background-color: white;
             }
         """)
@@ -68,8 +68,8 @@ class InputSectionComponent(QWidget):
             QPushButton {
                 background: qlineargradient(
                     x1:0, y1:0, x2:0, y2:1,
-                    stop:0 #667eea, 
-                    stop:1 #764ba2
+                    stop:0 #28431a, 
+                    stop:1 #3d6329
                 );
                 color: white;
                 border-radius: 8px;

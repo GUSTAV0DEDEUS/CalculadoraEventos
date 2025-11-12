@@ -25,7 +25,7 @@ class ChartSectionComponent(QWidget):
                 font-weight: bold;
             }
             QGroupBox::title {
-                color: #667eea;
+                color: #28431a;
                 subcontrol-origin: margin;
                 left: 15px;
                 top: 8px;
