@@ -1,6 +1,6 @@
 from PySide6.QtWidgets import QWidget, QHBoxLayout, QLabel, QLineEdit, QPushButton, QGroupBox
 from PySide6.QtCore import Qt, Signal
-from PySide6.QtGui import QDoubleValidator
+import re
 
 
 class InputSectionComponent(QWidget):
@@ -8,6 +8,7 @@ class InputSectionComponent(QWidget):
     
     def __init__(self, parent=None):
         super().__init__(parent)
+        self._formatando = False
         self.setup_ui()
     
     def setup_ui(self):
@@ -40,7 +41,7 @@ class InputSectionComponent(QWidget):
         label.setStyleSheet("QLabel { font-size: 13px; color: #495057; }")
         
         self.input_valor = QLineEdit()
-        self.input_valor.setPlaceholderText("Digite o valor do evento")
+        self.input_valor.setPlaceholderText("Digite o valor do evento (ex: 10.000,00)")
         self.input_valor.setMinimumHeight(45)
         self.input_valor.setStyleSheet("""
             QLineEdit {
@@ -56,16 +57,13 @@ class InputSectionComponent(QWidget):
             }
         """)
         
-        validator = QDoubleValidator(0.0, 999999999.99, 2)
-        validator.setNotation(QDoubleValidator.StandardNotation)
-        self.input_valor.setValidator(validator)
-        
+        self.input_valor.textChanged.connect(self._formatar_input)
         self.input_valor.returnPressed.connect(self._on_calcular)
         
         self.btn_calcular = QPushButton("Calcular")
         self.btn_calcular.setMinimumHeight(45)
         self.btn_calcular.setMinimumWidth(130)
-        self.btn_calcular.setCursor(Qt.PointingHandCursor)
+        self.btn_calcular.setCursor(Qt.PointingHandCursor) # type: ignore
         self.btn_calcular.setStyleSheet("""
             QPushButton {
                 background: qlineargradient(
@@ -104,9 +102,56 @@ class InputSectionComponent(QWidget):
         group.setLayout(group_layout)
         layout.addWidget(group)
     
+    def _formatar_input(self, texto: str):
+        if self._formatando:
+            return
+        
+        self._formatando = True
+        
+        cursor_pos = self.input_valor.cursorPosition()
+        
+        texto_limpo = re.sub(r'[^\d,.]', '', texto)
+        
+        partes = texto_limpo.replace(',', '.').split('.')
+        
+        if len(partes) > 2:
+            parte_inteira = ''.join(partes[:-1])
+            parte_decimal = partes[-1]
+        elif len(partes) == 2:
+            parte_inteira = partes[0]
+            parte_decimal = partes[1]
+        else:
+            parte_inteira = partes[0]
+            parte_decimal = ''
+        
+        if parte_decimal:
+            parte_decimal = parte_decimal[:2]
+        
+        if parte_inteira:
+            parte_inteira = str(int(parte_inteira)) if parte_inteira else '0'
+            parte_inteira_formatada = f"{int(parte_inteira):,}".replace(',', '.')
+        else:
+            parte_inteira_formatada = ''
+        
+        if parte_decimal:
+            texto_formatado = f"{parte_inteira_formatada},{parte_decimal}"
+        elif texto_limpo.endswith(',') or texto_limpo.endswith('.'):
+            texto_formatado = f"{parte_inteira_formatada},"
+        else:
+            texto_formatado = parte_inteira_formatada
+        
+        if texto_formatado != texto:
+            diff = len(texto_formatado) - len(texto)
+            nova_pos = cursor_pos + diff
+            
+            self.input_valor.setText(texto_formatado)
+            self.input_valor.setCursorPosition(min(nova_pos, len(texto_formatado)))
+        
+        self._formatando = False
+    
     def _on_calcular(self):
         try:
-            valor_str = self.input_valor.text().replace(',', '.')
+            valor_str = self.input_valor.text().replace('.', '').replace(',', '.')
             if not valor_str:
                 return
             
@@ -118,7 +163,7 @@ class InputSectionComponent(QWidget):
     
     def get_valor(self) -> float:
         try:
-            valor_str = self.input_valor.text().replace(',', '.')
+            valor_str = self.input_valor.text().replace('.', '').replace(',', '.')
             return float(valor_str) if valor_str else 0.0
         except ValueError:
             return 0.0

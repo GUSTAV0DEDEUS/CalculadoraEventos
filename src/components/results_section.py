@@ -58,8 +58,8 @@ class ResultsSectionComponent(QWidget):
                 }
             """)
             
-            grid_layout.addWidget(label_cat, row, 0, Qt.AlignLeft)
-            grid_layout.addWidget(label_valor, row, 1, Qt.AlignRight)
+            grid_layout.addWidget(label_cat, row, 0, Qt.AlignLeft) # type: ignore
+            grid_layout.addWidget(label_valor, row, 1, Qt.AlignRight) # type: ignore
             
             self.labels_valores[categoria] = label_valor
             row += 1
@@ -88,8 +88,8 @@ class ResultsSectionComponent(QWidget):
             }
         """)
         
-        grid_layout.addWidget(label_total_text, row, 0, Qt.AlignLeft)
-        grid_layout.addWidget(self.label_total_valor, row, 1, Qt.AlignRight)
+        grid_layout.addWidget(label_total_text, row, 0, Qt.AlignLeft) # type: ignore
+        grid_layout.addWidget(self.label_total_valor, row, 1, Qt.AlignRight) # type: ignore
         
         group.setLayout(grid_layout)
         layout.addWidget(group)

@@ -1,5 +1,5 @@
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QGroupBox
-from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas # type: ignore
 from matplotlib.figure import Figure
 from typing import Dict, List
 
@@ -56,7 +56,7 @@ class ChartSectionComponent(QWidget):
             self._criar_grafico_vazio()
             return
         
-        wedges, texts, autotexts = ax.pie(
+        wedges, texts, autotexts = ax.pie( # type: ignore
             sizes,
             labels=labels,
             autopct='%1.1f%%',

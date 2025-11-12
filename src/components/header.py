@@ -23,13 +23,13 @@ class HeaderComponent(QWidget):
         if os.path.exists(logo_path):
             logo_label = QLabel()
             pixmap = QPixmap(logo_path)
-            scaled_pixmap = pixmap.scaled(60, 60, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+            scaled_pixmap = pixmap.scaled(60, 60, Qt.KeepAspectRatio, Qt.SmoothTransformation) # type: ignore
             logo_label.setPixmap(scaled_pixmap)
-            logo_label.setAlignment(Qt.AlignCenter)
+            logo_label.setAlignment(Qt.AlignCenter) # type: ignore
             header_layout.addWidget(logo_label)
         
         titulo = QLabel("Calculadora de Eventos")
-        titulo.setAlignment(Qt.AlignCenter)
+        titulo.setAlignment(Qt.AlignCenter) # type: ignore
         titulo.setStyleSheet("""
             QLabel {
                 color: white;
@@ -41,7 +41,7 @@ class HeaderComponent(QWidget):
         header_layout.addWidget(titulo)
         
         subtitulo = QLabel("Distribuição Inteligente de Custos")
-        subtitulo.setAlignment(Qt.AlignCenter)
+        subtitulo.setAlignment(Qt.AlignCenter) # type: ignore
         subtitulo.setStyleSheet("""
             QLabel {
                 color: rgba(255, 255, 255, 0.9);
