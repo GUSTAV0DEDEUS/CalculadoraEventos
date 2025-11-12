@@ -15,7 +15,7 @@ class MainWindow(QMainWindow):
     
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Calculadora de Eventos")
+        self.setWindowTitle("T2F Calculador de eventos")
         self.setMinimumSize(1000, 750)
         
         self.calculadora = CalculadoraCustos(PERCENTUAIS)

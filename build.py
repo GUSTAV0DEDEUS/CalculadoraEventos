@@ -19,11 +19,12 @@ def build_windows():
     
     command = [
         'pyinstaller',
-        '--name=CalculadoraEventos',
+        '--name=T2FCalculadoraEventos',
         '--windowed',
         '--onefile',
         '--icon=icon.ico' if os.path.exists('icon.ico') else '',
         '--add-data=src:src',
+        '--add-data=icon.ico:icon.ico',
         '--noconsole',
         'main.py'
     ]
