@@ -6,7 +6,7 @@ PERCENTUAIS = {
     'Lucro': 37.0
 }
 
-CORES = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#FFA07A', '#98D8C8']
+CORES = ['#28431a', '#3d6329', '#52833a', '#6ba34b', '#84c35c']
 
 ESTILOS = {
     'header': """

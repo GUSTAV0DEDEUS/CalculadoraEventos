@@ -39,17 +39,20 @@ class HeaderComponent(QWidget):
             }
         """)
         header_layout.addWidget(titulo)
-        
-        subtitulo = QLabel("Distribuição Inteligente de Custos")
-        subtitulo.setAlignment(Qt.AlignCenter) # type: ignore
-        subtitulo.setStyleSheet("""
+
+        info_uso = QLabel("Digite o valor total do evento e veja a distribuição automática entre Staff, Locação, CMV, Nota e Lucro")
+        info_uso.setAlignment(Qt.AlignCenter) # type: ignore
+        info_uso.setWordWrap(True)
+        info_uso.setStyleSheet("""
             QLabel {
-                color: rgba(255, 255, 255, 0.9);
-                font-size: 14px;
+                color: rgba(255, 255, 255, 0.85);
+                font-size: 12px;
                 background: transparent;
+                padding: 8px 20px;
+                margin-top: 5px;
             }
         """)
-        header_layout.addWidget(subtitulo)
+        header_layout.addWidget(info_uso)
         
         header_widget.setStyleSheet("""
             QWidget {
