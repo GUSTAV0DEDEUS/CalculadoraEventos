@@ -1,0 +1,93 @@
+import os
+import sys
+import shutil
+import subprocess
+
+
+def build_windows():
+    print("=" * 60)
+    print("Iniciando build do executável para Windows...")
+    print("=" * 60)
+    
+    if os.path.exists('build'):
+        print("Removendo diretório build antigo...")
+        shutil.rmtree('build')
+    
+    if os.path.exists('dist'):
+        print("Removendo diretório dist antigo...")
+        shutil.rmtree('dist')
+    
+    command = [
+        'pyinstaller',
+        '--name=CalculadoraEventos',
+        '--windowed',
+        '--onefile',
+        '--icon=icon.ico' if os.path.exists('icon.ico') else '',
+        '--add-data=src:src',
+        '--noconsole',
+        'main.py'
+    ]
+    
+    command = [arg for arg in command if arg]
+    
+    print("\nExecutando PyInstaller...")
+    print(f"Comando: {' '.join(command)}\n")
+    
+    try:
+        result = subprocess.run(command, check=True, capture_output=True, text=True)
+        print(result.stdout)
+        
+        print("\n" + "=" * 60)
+        print("Build concluído com sucesso!")
+        print("=" * 60)
+        print(f"\nO executável está em: dist/CalculadoraEventos.exe")
+        print("\nVocê pode distribuir o arquivo .exe para outros computadores Windows.")
+        print("Não é necessário instalar Python ou outras dependências.")
+        
+    except subprocess.CalledProcessError as e:
+        print("\n" + "=" * 60)
+        print("ERRO durante o build!")
+        print("=" * 60)
+        print(e.stderr)
+        sys.exit(1)
+
+
+def check_dependencies():
+    print("Verificando dependências...\n")
+    
+    try:
+        import PySide6
+        print("✓ PySide6 instalado")
+    except ImportError:
+        print("✗ PySide6 não encontrado")
+        return False
+    
+    try:
+        import matplotlib
+        print("✓ matplotlib instalado")
+    except ImportError:
+        print("✗ matplotlib não encontrado")
+        return False
+    
+    try:
+        import PyInstaller
+        print("✓ PyInstaller instalado")
+    except ImportError:
+        print("✗ PyInstaller não encontrado")
+        return False
+    
+    print("\nTodas as dependências estão instaladas!\n")
+    return True
+
+
+if __name__ == '__main__':
+    print("Calculadora de Eventos - Build Script")
+    print("=" * 60)
+    
+    if not check_dependencies():
+        print("\nInstalando dependências...")
+        subprocess.run([sys.executable, '-m', 'pip', 'install', '-r', 'requirements.txt'])
+        print("\nDependências instaladas. Execute o script novamente.")
+        sys.exit(0)
+    
+    build_windows()
