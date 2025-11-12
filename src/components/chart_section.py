@@ -63,7 +63,7 @@ class ChartSectionComponent(QWidget):
             startangle=90,
             colors=self.cores[:len(labels)],
             textprops={'fontsize': 10, 'color': '#2c3e50'},
-            pctdistance=0.85
+            pctdistance=0.75
         )
         
         for autotext in autotexts:

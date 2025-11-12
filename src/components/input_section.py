@@ -50,10 +50,12 @@ class InputSectionComponent(QWidget):
                 padding: 10px 15px;
                 font-size: 16px;
                 background-color: #f8f9fa;
+                color: #000000;
             }
             QLineEdit:focus {
                 border: 2px solid #28431a;
                 background-color: white;
+                color: #000000;
             }
         """)
         

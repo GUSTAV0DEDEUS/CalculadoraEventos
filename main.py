@@ -1,4 +1,5 @@
 import sys
+import os
 from pathlib import Path 
 from PySide6.QtWidgets import QApplication
 from PySide6.QtGui import QIcon
@@ -12,9 +13,14 @@ def main():
 
     app.setStyle('Fusion')
 
-    icon_tmp = str(Path('icon.ico'))
-    if icon_tmp:
-        app.setWindowIcon(QIcon(icon_tmp))
+    if getattr(sys, 'frozen', False):
+        base_path = sys._MEIPASS  # type: ignore
+    else:
+        base_path = os.path.dirname(os.path.abspath(__file__))
+    
+    icon_path = os.path.join(base_path, 'icon.ico')
+    if os.path.exists(icon_path):
+        app.setWindowIcon(QIcon(icon_path))
 
     window = MainWindow()
     window.show()
