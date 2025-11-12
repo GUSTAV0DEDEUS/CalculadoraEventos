@@ -112,40 +112,44 @@ class InputSectionComponent(QWidget):
         
         texto_limpo = re.sub(r'[^\d,.]', '', texto)
         
-        partes = texto_limpo.replace(',', '.').split('.')
-        
-        if len(partes) > 2:
-            parte_inteira = ''.join(partes[:-1])
-            parte_decimal = partes[-1]
-        elif len(partes) == 2:
-            parte_inteira = partes[0]
-            parte_decimal = partes[1]
+        tem_virgula = ',' in texto_limpo
+        tem_ponto_final = texto_limpo.endswith('.')
+        if tem_virgula:
+            partes = texto_limpo.split(',')
+
+            if len(partes) >= 2:
+                parte_inteira = partes[0].replace('.', '')
+                parte_decimal = ''.join(partes[1:]).replace('.', '')[:2]
+            else:
+                parte_inteira = partes[0].replace('.', '')
+                parte_decimal = ''
+        elif tem_ponto_final:
+            parte_inteira = texto_limpo.replace('.', '').replace(',', '')
+            parte_decimal = ''
+            tem_virgula = True
         else:
-            parte_inteira = partes[0]
+            parte_inteira = texto_limpo.replace('.', '').replace(',', '')
             parte_decimal = ''
         
-        if parte_decimal:
-            parte_decimal = parte_decimal[:2]
-        
         if parte_inteira:
-            parte_inteira = str(int(parte_inteira)) if parte_inteira else '0'
-            parte_inteira_formatada = f"{int(parte_inteira):,}".replace(',', '.')
+            try:
+                parte_inteira_num = int(parte_inteira) if parte_inteira else 0
+                parte_inteira_formatada = f"{parte_inteira_num:,}".replace(',', '.')
+            except ValueError:
+                parte_inteira_formatada = parte_inteira
         else:
             parte_inteira_formatada = ''
         
         if parte_decimal:
             texto_formatado = f"{parte_inteira_formatada},{parte_decimal}"
-        elif texto_limpo.endswith(',') or texto_limpo.endswith('.'):
+        elif tem_virgula or tem_ponto_final:
             texto_formatado = f"{parte_inteira_formatada},"
         else:
             texto_formatado = parte_inteira_formatada
         
         if texto_formatado != texto:
-            diff = len(texto_formatado) - len(texto)
-            nova_pos = cursor_pos + diff
-            
             self.input_valor.setText(texto_formatado)
-            self.input_valor.setCursorPosition(min(nova_pos, len(texto_formatado)))
+            self.input_valor.setCursorPosition(len(texto_formatado))
         
         self._formatando = False
     
