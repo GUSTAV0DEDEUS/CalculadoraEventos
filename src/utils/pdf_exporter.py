@@ -232,6 +232,27 @@ def export_client_to_pdf(client_data: Dict, output_path: str):
     # Valor total
     valor_total = client_data.get('valor_total', 0.0)
     story.append(Paragraph(f"<b>Valor Total do Evento:</b> {format_brl(valor_total)}", normal_style))
+    
+    # Calcular dados de lucro para exibir logo abaixo
+    percentuais = client_data.get('percentuais', {})
+    valores_reais = client_data.get('valores_reais', {})
+    valores_esperados = {k: valor_total * (v / 100) for k, v in percentuais.items()}
+    
+    lucro_real = valores_reais.get('Lucro', 0.0)
+    lucro_esperado = valores_esperados.get('Lucro', 0.0)
+    lucro_diff = lucro_real - lucro_esperado
+    
+    # Adicionar informações de lucro
+    story.append(Paragraph(f"<b>Lucro Esperado:</b> {format_brl(lucro_esperado)}", normal_style))
+    story.append(Paragraph(f"<b>Lucro Real:</b> {format_brl(lucro_real)}", normal_style))
+    
+    if lucro_diff > 0:
+        story.append(Paragraph(f"<b>Variação:</b> <font color='green'>+{format_brl(lucro_diff)} (acima do esperado)</font>", normal_style))
+    elif lucro_diff < 0:
+        story.append(Paragraph(f"<b>Variação:</b> <font color='red'>{format_brl(lucro_diff)} (abaixo do esperado)</font>", normal_style))
+    else:
+        story.append(Paragraph(f"<b>Variação:</b> Conforme planejado", normal_style))
+    
     story.append(Spacer(1, 5*mm))
     
     # Tabela de valores detalhados
@@ -239,9 +260,6 @@ def export_client_to_pdf(client_data: Dict, output_path: str):
     
     percentuais = client_data.get('percentuais', {})
     valores_reais = client_data.get('valores_reais', {})
-    
-    # Calcular valores esperados
-    valores_esperados = {k: valor_total * (v / 100) for k, v in percentuais.items()}
     
     # Preparar dados da tabela
     table_data = [['Categoria', 'Margem (%)', 'Valor Esperado', 'Valor Real', 'Diferença']]
@@ -313,24 +331,6 @@ def export_client_to_pdf(client_data: Dict, output_path: str):
     ]))
     
     story.append(table)
-    story.append(Spacer(1, 10*mm))
-    
-    # Análise de lucro
-    lucro_real = valores_reais.get('Lucro', 0.0)
-    lucro_esperado = valores_esperados.get('Lucro', 0.0)
-    lucro_diff = lucro_real - lucro_esperado
-    
-    story.append(Paragraph("<b>Análise de Lucro</b>", subtitle_style))
-    story.append(Paragraph(f"<b>Lucro Esperado:</b> {format_brl(lucro_esperado)}", normal_style))
-    story.append(Paragraph(f"<b>Lucro Real:</b> {format_brl(lucro_real)}", normal_style))
-    
-    if lucro_diff > 0:
-        story.append(Paragraph(f"<b>Variação:</b> <font color='green'>+{format_brl(lucro_diff)} (acima do esperado)</font>", normal_style))
-    elif lucro_diff < 0:
-        story.append(Paragraph(f"<b>Variação:</b> <font color='red'>{format_brl(lucro_diff)} (abaixo do esperado)</font>", normal_style))
-    else:
-        story.append(Paragraph(f"<b>Variação:</b> Conforme planejado", normal_style))
-    
     story.append(Spacer(1, 10*mm))
     
     # Gráficos
