@@ -100,7 +100,7 @@ def create_profit_chart(valores_reais: Dict[str, float]):
     return buf
 
 
-def draw_header_on_canvas(canvas_obj, doc, client_name: str, date_str: str, logo_path: Optional[str]):
+def draw_header_on_canvas(canvas_obj, doc, client_name: str, logo_path: Optional[str]):
     """Desenha o header verde diretamente no canvas, ignorando margens"""
     canvas_obj.saveState()
     
@@ -130,13 +130,15 @@ def draw_header_on_canvas(canvas_obj, doc, client_name: str, date_str: str, logo
     logo_x = 20*mm
     logo_y = header_y + (header_height / 2) - (21*mm / 2)
     
+    text_x = logo_x  # Texto começa na mesma posição da logo por padrão
+    
     if logo_path and os.path.exists(logo_path):
         try:
             # Tentar carregar a imagem
             canvas_obj.drawImage(logo_path, logo_x, logo_y, 
                            width=21*mm, height=21*mm, 
                            preserveAspectRatio=True, mask='auto')
-            text_x = logo_x + 21*mm + 8
+            text_x = logo_x + 21*mm + 3*mm  # 3mm de espaço após a logo
             print(f"Logo carregada com sucesso: {logo_path}")
         except Exception as e:
             print(f"Erro ao carregar logo {logo_path}: {e}")
@@ -145,25 +147,17 @@ def draw_header_on_canvas(canvas_obj, doc, client_name: str, date_str: str, logo
                 canvas_obj.drawImage(logo_path, logo_x, logo_y, 
                                width=21*mm, height=21*mm, 
                                preserveAspectRatio=True)
-                text_x = logo_x + 21*mm + 8
+                text_x = logo_x + 21*mm + 3*mm  # 3mm de espaço após a logo
                 print(f"Logo carregada sem mask")
             except Exception as e2:
                 print(f"Erro ao carregar logo (segunda tentativa): {e2}")
-                text_x = 20*mm
     else:
         print(f"Logo não encontrada ou caminho inválido: {logo_path}")
-        text_x = 20*mm
     
-    # Adicionar texto (nome e data)
+    # Adicionar texto (apenas nome do cliente, abaixado 5 pixels)
     canvas_obj.setFillColor(colors.white)
-    
-    # Nome do cliente (bold)
     canvas_obj.setFont('Helvetica-Bold', 18)
-    canvas_obj.drawString(text_x, header_y + (header_height / 2) + 6, client_name)
-    
-    # Data (normal)
-    canvas_obj.setFont('Helvetica', 11)
-    canvas_obj.drawString(text_x, header_y + (header_height / 2) - 10, date_str)
+    canvas_obj.drawString(text_x, header_y + (header_height / 2) - 5, client_name)
     
     canvas_obj.restoreState()
 
@@ -192,7 +186,7 @@ def export_client_to_pdf(client_data: Dict, output_path: str):
     
     # Função de callback para desenhar header em cada página
     def add_header(canvas_obj, doc):
-        draw_header_on_canvas(canvas_obj, doc, client_name, data_atual, logo_path)
+        draw_header_on_canvas(canvas_obj, doc, client_name, logo_path)
     
     # Criar documento com margens normais
     doc = SimpleDocTemplate(output_path, pagesize=A4,
@@ -333,23 +327,26 @@ def export_client_to_pdf(client_data: Dict, output_path: str):
     story.append(table)
     story.append(Spacer(1, 10*mm))
     
-    # Gráficos
+    # Gráficos em duas colunas
     story.append(Paragraph("<b>Visualizações Gráficas</b>", subtitle_style))
     story.append(Spacer(1, 3*mm))
     
     # Gráfico de distribuição
     chart_buf = create_chart_image(valores_esperados, valores_reais)
-    chart_img = Image(chart_buf, width=160*mm, height=60*mm)
-    story.append(chart_img)
-    story.append(Spacer(1, 5*mm))
+    chart_img = Image(chart_buf, width=115*mm, height=60*mm)
     
-    # Gráfico de lucro
+    # Gráfico de lucro (menor para dar mais espaço à distribuição)
     profit_buf = create_profit_chart(valores_reais)
-    profit_img = Image(profit_buf, width=80*mm, height=80*mm)
+    profit_img = Image(profit_buf, width=50*mm, height=50*mm)
     
-    profit_table = Table([[profit_img]], colWidths=[80*mm])
-    profit_table.setStyle(TableStyle([('ALIGN', (0, 0), (0, 0), 'CENTER')]))
-    story.append(profit_table)
+    # Criar tabela com dois gráficos lado a lado
+    graphs_table = Table([[chart_img, profit_img]], colWidths=[120*mm, 50*mm])
+    graphs_table.setStyle(TableStyle([
+        ('ALIGN', (0, 0), (0, 0), 'LEFT'),
+        ('ALIGN', (1, 0), (1, 0), 'CENTER'),
+        ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+    ]))
+    story.append(graphs_table)
     
     # Rodapé
     story.append(Spacer(1, 10*mm))
