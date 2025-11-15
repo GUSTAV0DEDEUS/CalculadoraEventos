@@ -1,0 +1,24 @@
+{
+  "clients": [
+    {
+      "name": "Tiag",
+      "percentuais": {
+        "Staff": 12.0,
+        "Locação": 9.0,
+        "CMV": 30.0,
+        "Nota": 12.0,
+        "Lucro": 37.0
+      },
+      "valor_total": 4000.0,
+      "valores_reais": {
+        "CMV": 2298.2,
+        "Locação": 29.0,
+        "Lucro": 22.0,
+        "Nota": 2222.0,
+        "Staff": 402.0
+      },
+      "historico": [],
+      "ultimo_total_real": 4973.2
+    }
+  ]
+}
