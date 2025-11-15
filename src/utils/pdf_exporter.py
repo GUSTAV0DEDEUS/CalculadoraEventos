@@ -41,11 +41,14 @@ def create_chart_image(valores_esperados: Dict[str, float], valores_reais: Dict[
         y_pos = range(len(labels))
         bar_height = 0.35
         
-        cores_esp = ['#28431a', '#3d6329', '#4a7a31', '#5a8f3a', '#6ba543']
+        # Cores em tons de verde - claro para esperado, escuro para real
+        cor_esperado = '#70AD47'  # Verde claro
+        cor_real = '#3D6329'      # Verde escuro
+        
         ax.barh([i - bar_height/2 for i in y_pos], perc_esp, bar_height, 
-                label='Esperado', color=cores_esp[:len(labels)], alpha=0.9)
+                label='Esperado', color=cor_esperado, alpha=0.9)
         ax.barh([i + bar_height/2 for i in y_pos], perc_real, bar_height,
-                label='Real', color='#63c76a', alpha=0.9)
+                label='Real', color=cor_real, alpha=0.9)
         
         ax.set_yticks(list(y_pos))
         ax.set_yticklabels(labels, fontsize=8)

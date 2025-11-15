@@ -79,10 +79,15 @@ class ChartSectionComponent(QWidget):
 
         # Barras horizontais
         bar_height = 0.35
+        
+        # Cores em tons de verde - claro para esperado, escuro para real
+        cor_esperado = '#70AD47'  # Verde claro
+        cor_real = '#3D6329'      # Verde escuro
+        
         barras_esp = ax.barh([i - bar_height/2 for i in y_pos], perc_esp, bar_height, 
-                             label='Esperado (%)', color=self.cores[0:len(labels)], alpha=0.8)
+                             label='Esperado (%)', color=cor_esperado, alpha=0.9)
         barras_real = ax.barh([i + bar_height/2 for i in y_pos], perc_real, bar_height,
-                              label='Real (%)', color=['#63c76a'] * len(labels), alpha=0.8)
+                              label='Real (%)', color=cor_real, alpha=0.9)
 
         ax.set_yticks(list(y_pos))
         ax.set_yticklabels(labels)
