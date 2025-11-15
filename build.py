@@ -17,13 +17,16 @@ def build_windows():
         print("Removendo diretório dist antigo...")
         shutil.rmtree('dist')
     
+    sep = ';' if os.name == 'nt' else ':'
+    
     command = [
         'pyinstaller',
-        '--name=CalculadoraEventos',
+        '--name=T2FCalculadoraEventos',
         '--windowed',
         '--onefile',
         '--icon=icon.ico' if os.path.exists('icon.ico') else '',
-        '--add-data=src:src',
+        f'--add-data=src{sep}src',
+        f'--add-data=icon.ico{sep}.' if os.path.exists('icon.ico') else '',
         '--noconsole',
         'main.py'
     ]
