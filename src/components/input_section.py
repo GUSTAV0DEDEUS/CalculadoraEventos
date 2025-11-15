@@ -5,6 +5,7 @@ import re
 
 class InputSectionComponent(QWidget):
     calcular_clicked = Signal(float)
+    exportar_clicked = Signal()  # Novo sinal para exportar PDF
     
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -95,9 +96,46 @@ class InputSectionComponent(QWidget):
         """)
         self.btn_calcular.clicked.connect(self._on_calcular)
         
+        # Botão Exportar PDF
+        self.btn_exportar = QPushButton("Exportar PDF")
+        self.btn_exportar.setMinimumHeight(45)
+        self.btn_exportar.setMinimumWidth(150)
+        self.btn_exportar.setCursor(Qt.PointingHandCursor) # type: ignore
+        self.btn_exportar.setStyleSheet("""
+            QPushButton {
+                background: qlineargradient(
+                    x1:0, y1:0, x2:0, y2:1,
+                    stop:0 #28431a, 
+                    stop:1 #3d6329
+                );
+                color: white;
+                border-radius: 8px;
+                font-size: 14px;
+                font-weight: bold;
+                padding: 12px 20px;
+                border: none;
+            }
+            QPushButton:hover {
+                background: qlineargradient(
+                    x1:0, y1:0, x2:0, y2:1,
+                    stop:0 #3d6329, 
+                    stop:1 #4a7a31
+                );
+            }
+            QPushButton:pressed {
+                background: qlineargradient(
+                    x1:0, y1:0, x2:0, y2:1,
+                    stop:0 #1f2912, 
+                    stop:1 #2d3a1d
+                );
+            }
+        """)
+        self.btn_exportar.clicked.connect(self._on_exportar)
+        
         group_layout.addWidget(label)
         group_layout.addWidget(self.input_valor, 1)
         group_layout.addWidget(self.btn_calcular)
+        group_layout.addWidget(self.btn_exportar)
         
         group.setLayout(group_layout)
         layout.addWidget(group)
@@ -164,6 +202,10 @@ class InputSectionComponent(QWidget):
                 self.calcular_clicked.emit(valor_total)
         except ValueError:
             pass
+    
+    def _on_exportar(self):
+        """Emite sinal para exportar PDF"""
+        self.exportar_clicked.emit()
     
     def get_valor(self) -> float:
         try:

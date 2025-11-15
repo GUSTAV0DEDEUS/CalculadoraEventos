@@ -1,7 +1,9 @@
 import sys
+import os
 from typing import Dict
+from datetime import datetime
 
-from PySide6.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QHBoxLayout
+from PySide6.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QFileDialog, QMessageBox
 from PySide6.QtCore import Qt
 
 from src.components.header import HeaderComponent
@@ -12,6 +14,7 @@ from src.components.chart_section import ChartSectionComponent
 from src.utils.storage import load_all_clients, update_client, get_client, create_client
 from src.utils.constants import PERCENTUAIS, CORES
 from src.utils.calculator import CalculadoraCustos
+from src.utils.pdf_exporter import export_client_to_pdf
 
 
 class MainWindow(QMainWindow):
@@ -62,6 +65,7 @@ class MainWindow(QMainWindow):
 
         self.input_section = InputSectionComponent()
         self.input_section.calcular_clicked.connect(self.on_calcular)
+        self.input_section.exportar_clicked.connect(self.on_exportar_pdf)
         area.addWidget(self.input_section)
 
         # Results table (mais espaço vertical para evitar overflow)
@@ -161,6 +165,34 @@ class MainWindow(QMainWindow):
             self.chart_section.atualizar_grafico({'valores_reais': client['valores_reais'], 'valores_esperados': esperados})
         except Exception:
             pass
+
+    def on_exportar_pdf(self):
+        """Exporta o cliente selecionado para PDF"""
+        if self.current_client_index < 0:
+            QMessageBox.warning(self, 'Aviso', 'Nenhum cliente selecionado!')
+            return
+        
+        try:
+            client = get_client(self.current_client_index)
+            client_name = client.get('name', 'Cliente').replace(' ', '_')
+            timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+            default_filename = f"relatorio_{client_name}_{timestamp}.pdf"
+            
+            # Diálogo para escolher onde salvar
+            filename, _ = QFileDialog.getSaveFileName(
+                self,
+                'Salvar Relatório PDF',
+                default_filename,
+                'PDF Files (*.pdf)'
+            )
+            
+            if filename:
+                # Exportar para PDF
+                export_client_to_pdf(client, filename)
+                QMessageBox.information(self, 'Sucesso', f'Relatório exportado com sucesso!\n\n{filename}')
+        
+        except Exception as e:
+            QMessageBox.critical(self, 'Erro', f'Erro ao exportar PDF:\n{str(e)}')
 
     def resizeEvent(self, event):
         super().resizeEvent(event)
