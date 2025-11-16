@@ -41,7 +41,15 @@ class InputSectionComponent(QWidget):
         group_layout.setSpacing(15)
         
         label = QLabel("Valor Total (R$):")
-        label.setStyleSheet("QLabel { font-size: 13px; color: #495057; }")
+        label.setStyleSheet("""
+            QLabel {
+                font-size: 13px;
+                color: #000000;
+                background-color: white;
+                padding: 2px 6px;
+                border-radius: 4px;
+            }
+        """)
         
         self.input_valor = QLineEdit()
         self.input_valor.setPlaceholderText("Digite o valor do evento (ex: 10.000,00)")
