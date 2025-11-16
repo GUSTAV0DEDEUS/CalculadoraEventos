@@ -19,14 +19,24 @@ def build_windows():
     
     sep = ';' if os.name == 'nt' else ':'
     
+    # Usar o pyinstaller do ambiente virtual ou do Python atual
+    pyinstaller_cmd = 'pyinstaller'
+    if hasattr(sys, 'real_prefix') or (hasattr(sys, 'base_prefix') and sys.base_prefix != sys.prefix):
+        # Estamos em um ambiente virtual
+        venv_scripts = os.path.join(sys.prefix, 'Scripts')
+        pyinstaller_path = os.path.join(venv_scripts, 'pyinstaller.exe')
+        if os.path.exists(pyinstaller_path):
+            pyinstaller_cmd = pyinstaller_path
+    
     command = [
-        'pyinstaller',
+        pyinstaller_cmd,
         '--name=T2FCalculadoraEventos',
         '--windowed',
         '--onefile',
         '--icon=icon.ico' if os.path.exists('icon.ico') else '',
         f'--add-data=src{sep}src',
         f'--add-data=icon.ico{sep}.' if os.path.exists('icon.ico') else '',
+        f'--add-data=t2f.png{sep}.' if os.path.exists('t2f.png') else '',
         '--noconsole',
         'main.py'
     ]

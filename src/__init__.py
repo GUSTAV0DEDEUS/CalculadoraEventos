@@ -3,7 +3,7 @@ import os
 from typing import Dict
 from datetime import datetime
 
-from PySide6.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QFileDialog, QMessageBox
+from PySide6.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QFileDialog, QMessageBox, QScrollArea
 from PySide6.QtCore import Qt
 
 from src.components.header import HeaderComponent
@@ -57,8 +57,42 @@ class MainWindow(QMainWindow):
         self.sidebar.cliente_created.connect(self.on_client_created)
         main_layout.addWidget(self.sidebar, 0)
 
-        # Área principal vertical
-        area = QVBoxLayout()
+        # Área principal com scroll
+        scroll_area = QScrollArea()
+        scroll_area.setWidgetResizable(True)
+        scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        scroll_area.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
+        scroll_area.setStyleSheet("""
+            QScrollArea {
+                border: none;
+                background-color: #f0f2f5;
+            }
+            QScrollBar:vertical {
+                background-color: #f0f2f5;
+                width: 12px;
+                border-radius: 6px;
+            }
+            QScrollBar::handle:vertical {
+                background-color: #f0f2f5;
+                border-radius: 6px;
+                min-height: 20px;
+            }
+            QScrollBar::handle:vertical:hover {
+                background-color: #d0d2d5;
+            }
+            QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
+                height: 0px;
+            }
+            QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {
+                background: #f0f2f5;
+            }
+        """)
+        
+        # Widget de conteúdo dentro do scroll
+        content_widget = QWidget()
+        content_widget.setStyleSheet("background-color: #f0f2f5;")
+        area = QVBoxLayout(content_widget)
+        area.setContentsMargins(0, 0, 0, 0)
 
         self.header = HeaderComponent()
         area.addWidget(self.header)
@@ -68,19 +102,23 @@ class MainWindow(QMainWindow):
         self.input_section.exportar_clicked.connect(self.on_exportar_pdf)
         area.addWidget(self.input_section)
 
-        # Results table (mais espaço vertical para evitar overflow)
+        # Results table
         self.results_table = ResultsTableComponent(PERCENTUAIS)
         self.results_table.dados_alterados.connect(self.on_dados_alterados)
         area.addWidget(self.results_table)
 
-        # Chart abaixo da tabela (menos espaço que a tabela)
+        # Chart abaixo da tabela
         self.chart_section = ChartSectionComponent(CORES)
-        area.addWidget(self.chart_section, 1)
+        area.addWidget(self.chart_section)
+        
+        # Adicionar espaçador no final para não ficar apertado
+        area.addStretch()
 
         # conectar sinal para atualizar gráfico quando dados da tabela mudarem
         self.results_table.dados_alterados.connect(lambda payload: self.chart_section.atualizar_grafico(payload))
 
-        main_layout.addLayout(area, 1)
+        scroll_area.setWidget(content_widget)
+        main_layout.addWidget(scroll_area, 1)
 
     def on_client_selected(self, index: int):
         self.current_client_index = index

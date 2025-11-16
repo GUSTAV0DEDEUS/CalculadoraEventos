@@ -48,6 +48,25 @@ class ClientsSidebar(QWidget):
 
         self.list_widget = QListWidget()
         self.list_widget.currentRowChanged.connect(self.on_select)
+        # Forçar fundo branco e fonte preta
+        self.list_widget.setStyleSheet("""
+            QListWidget { 
+                background-color: white; 
+                color: black; 
+            }
+            QListWidget::item { 
+                background-color: white; 
+                color: black; 
+                padding: 4px;
+            }
+            QListWidget::item:selected { 
+                background-color: #28431a; 
+                color: white; 
+            }
+            QListWidget::item:hover { 
+                background-color: #f0f0f0; 
+            }
+        """)
         layout.addWidget(self.list_widget, 1)
 
         # largura fixa da sidebar para liberar mais espaço à tabela
@@ -69,7 +88,7 @@ class ClientsSidebar(QWidget):
 
             name_edit = QLineEdit(client.get('name', ''))
             name_edit.setFrame(False)
-            name_edit.setStyleSheet('QLineEdit { background: transparent; font-size: 13px; }')
+            name_edit.setStyleSheet('QLineEdit { background: transparent; font-size: 13px; color: black; }')
             # associar o item para encontrar a linha depois
             name_edit._list_item = item
             name_edit.editingFinished.connect(lambda ed=name_edit: self.on_name_edited(ed))

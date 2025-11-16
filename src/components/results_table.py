@@ -62,9 +62,30 @@ class ResultsTableComponent(QWidget):
         self.table.setColumnCount(5)
         self.table.setHorizontalHeaderLabels(['Categoria', 'Percentual (%)', 'Valor Esperado', 'Valor Real', 'Percentual Real (%)'])
         self.table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
-        # estilo do cabeçalho (verde) para combinar com header do app
-        self.table.setStyleSheet("QHeaderView::section{ background-color: #28431a; color: white; padding: 6px; font-weight: bold; }")
+        # estilo com fundo branco e fonte preta forçados
+        self.table.setStyleSheet("""
+            QHeaderView::section { 
+                background-color: #28431a; 
+                color: white; 
+                padding: 6px; 
+                font-weight: bold; 
+            }
+            QTableWidget { 
+                background-color: white; 
+                color: black; 
+                gridline-color: #e0e0e0;
+            }
+            QTableWidget::item { 
+                background-color: white; 
+                color: black; 
+            }
+            QTableWidget::item:alternate { 
+                background-color: #f8f9fa; 
+                color: black; 
+            }
+        """)
         self.table.verticalHeader().setVisible(False)
+        self.table.setAlternatingRowColors(True)
         self.table.setEditTriggers(QTableWidget.AllEditTriggers)
         # conectar sinais
         self.table.cellChanged.connect(self.on_cell_changed)

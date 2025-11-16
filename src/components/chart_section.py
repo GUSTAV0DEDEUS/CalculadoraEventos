@@ -38,6 +38,7 @@ class ChartSectionComponent(QWidget):
         
         self.figure = Figure(figsize=(7, 5), facecolor='white')
         self.canvas = FigureCanvas(self.figure)
+        self.canvas.setMinimumHeight(400)
         group_layout.addWidget(self.canvas)
         
         group.setLayout(group_layout)
